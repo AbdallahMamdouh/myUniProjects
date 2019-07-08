@@ -96,17 +96,17 @@ public:
 		if (cross0() == 1 || cross1() == 1 || column0() == 1 || column1() == 1 || column2() == 1 || row0() == 1 || row1() == 1 || row2() == 1)
 		{
 			if (player || !choice)
-				cout << "player 2 wins!\n";
+				cout << "Human wins!\n";
 			else if (!player&&choice)
-				cout << "computer wins!!\n";
+				cout << "Computer wins!!\n";
 			return;
 		}
 		else if (cross0() == 2 || cross1() == 2 || column0() == 2 || column1() == 2 || column2() == 2 || row0() == 2 || row1() == 2 || row2() == 2)
 		{
 			if (player || choice)
-				cout << "player 1 wins!\n";
+				cout << "Human wins!\n";
 			else if (!player && !choice)
-				cout << "computer wins!!\n";
+				cout << "Computer wins!!\n";
 			return;
 		}
 		else if (plays == 9)
@@ -130,13 +130,16 @@ public:
 		display();
 	}
 	void playZ(board_map z, int row, int column)//plays either x or o in a given position
-	{
-		if (z == x)
-			playX(row, column);
-		else if (z == o)
-			playO(row, column);
-		turn = 0;
-		return;
+	{	
+		if (check(row, column))
+		{
+			if (z == x)
+				playX(row, column);
+			else if (z == o)
+				playO(row, column);
+			turn = 0;
+			return;
+		}
 	}
 	void autoplay()//AI for computer player
 	{
@@ -271,6 +274,16 @@ public:
 				playZ(s, 2, 0);
 			else if (X[2][2] == z && X[1][1] == z && X[0][2] == e)
 				playZ(s, 0, 2);
+			else if (((X[0][0] == z && X[2][2] == z) || (X[0][2] == z && X[2][0] == z))&&X[1][1]==s)
+			{
+				int row=999, column=999;
+				while (!check_side(row, column))
+				{
+					row = rand() % 3;
+					column = rand() % 3;
+				}
+				playZ(s, row, column);
+			}
 			}
 			//______________________________________________________________
 		}
@@ -335,6 +348,7 @@ public:
 	void display()//this function displays the game board
 	{
 		system("cls");
+		cout << "made Abdallah Mamdouh on november 2018";
 		cout << "\n__________________\n";
 		for (int i = 0; i < 3; i++)
 		{
@@ -416,6 +430,10 @@ public:
 		else if (X[2][0] == x && X[2][1] == x && X[2][2] == x)
 			return 2;
 		else return 0;
+	}
+	bool check_side(int r, int c)
+	{
+		return (check(r, c) && ((r == 0 && c == 1) || (r == 1 && c == 0) || (r == 1 && c == 2) || (r == 2 && c == 1)));
 	}
 };
 //main function of the game
